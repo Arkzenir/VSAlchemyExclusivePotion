@@ -39,34 +39,6 @@ All potions from the Alchemy mod are covered:
 
 - Vintage Story 1.21.0+
 - Alchemy mod 1.8.0+
-- .NET 7 SDK (to build from source)
-
-## Installation
-
-1. Build the mod (see below) or grab the pre-built zip
-2. Place `AlchemyExclusivePotions.zip` in your `Mods/` folder alongside Alchemy
-
-## Building from source
-
-**Linux / macOS:**
-```bash
-./build.sh "/path/to/VintageStory"
-```
-
-**Windows:**
-```bat
-build.bat "C:\Program Files\Vintage Story"
-```
-
-Output zip will be in the `dist/` folder.
-
-Alternatively, build manually:
-```bash
-dotnet build AlchemyExclusivePotions.csproj -c Release /p:VSGamePath="/path/to/VintageStory"
-```
-Then zip `bin/Release/AlchemyExclusivePotions.dll`, `modinfo.json`, and the `assets/` folder together.
-
-## How it works
 
 The mod uses [Harmony](https://harmony.pardeike.net/) (bundled with Vintage Story) to patch
 `ItemPotion.TryApplyPotion` — the single method Alchemy calls whenever any potion is consumed.

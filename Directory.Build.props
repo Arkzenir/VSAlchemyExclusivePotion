@@ -1,0 +1,49 @@
+<Project>
+
+  <!--
+    ══════════════════════════════════════════════════════════════════════════
+    Directory.Build.props — shared mod identity & build settings
+    Imported automatically by MSBuild before every .csproj in this folder.
+    ══════════════════════════════════════════════════════════════════════════
+  -->
+
+  <!-- ── Mod identity ─────────────────────────────────────────────────────── -->
+  <PropertyGroup>
+    <ModName>Alchemy Exclusive Potions</ModName>
+    <ModType>code</ModType>
+    <ModVersion>1.0.0</ModVersion>
+    <ModId>alchemyexclusivepotions</ModId>
+    <Description>Prevents multiple Alchemy mod potion effects from being active simultaneously. Only one potion may be active at a time.</Description>
+    <Side>universal</Side>
+    <RequiredOnClient>true</RequiredOnClient>
+    <RequiredOnServer>true</RequiredOnServer>
+  </PropertyGroup>
+
+  <!-- ── Authors ───────────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <ModInfoAuthors Include="Arkzenir" />
+  </ItemGroup>
+
+  <!-- ── Shared compiler settings ─────────────────────────────────────────── -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- ── Shared paths ──────────────────────────────────────────────────────── -->
+  <PropertyGroup>
+    <ProjectDir>$(MSBuildProjectDirectory)</ProjectDir>
+    <AssetsDir>$(ProjectDir)/resources/assets</AssetsDir>
+    <ExternalLibDir>$(ProjectDir)/external</ExternalLibDir>
+  </PropertyGroup>
+
+  <!-- ── Local path overrides ──────────────────────────────────────────────── -->
+  <!--
+    Copy Properties/localSettings.props.template to Properties/localSettings.props
+    and fill in your own machine paths.  The file is git-ignored.
+  -->
+  <Import Project="Properties/localSettings.props"
+          Condition="Exists('Properties/localSettings.props')" />
+
+</Project>

@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>AlchemyExclusivePotions</AssemblyName>
+    <RootNamespace>AlchemyExclusivePotions</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Set VS_GAME_PATH to your Vintage Story installation directory.
+    e.g. on Linux:   /home/user/.steam/steam/steamapps/common/Vintage Story
+         on Windows: C:\Program Files\Vintage Story
+    You can also set this as an environment variable.
+  -->
+  <PropertyGroup>
+    <VSGamePath Condition="'$(VSGamePath)' == ''">$(VS_GAME_PATH)</VSGamePath>
+    <VSGamePath Condition="'$(VSGamePath)' == ''">C:\Program Files\Vintage Story</VSGamePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Vintage Story API -->
+    <Reference Include="VintagestoryAPI">
+      <HintPath>$(VSGamePath)\VintagestoryAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="VSEssentials">
+      <HintPath>$(VSGamePath)\VSEssentials.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- Harmony — bundled with Vintage Story since 1.17 -->
+    <Reference Include="0Harmony">
+      <HintPath>$(VSGamePath)\Lib\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>

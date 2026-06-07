@@ -1,0 +1,11 @@
+{
+    "type": "code",
+    "name": "Alchemy Exclusive Potions",
+    "modid": "alchemyexclusivepotions",
+    "version": "1.0.0",
+    "description": "Prevents multiple Alchemy mod potion effects from being active at the same time. Only one potion may be active at a time.",
+    "authors": [],
+    "dependencies": {
+        "alchemy": "1.8.0"
+    }
+}

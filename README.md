@@ -1,86 +1,126 @@
 # Alchemy Exclusive Potions
 
-A small companion mod for [Alchemy by Llama3013](https://mods.vintagestory.at/alchemy) that enforces a **one-active-potion-at-a-time** rule.
+A companion mod for [Alchemy by Llama3013](https://mods.vintagestory.at/alchemy) that controls which potions can be taken together and which cannot.
 
-When a player already has any Alchemy potion effect active, attempting to drink another will:
-- **Block** the second potion (it is not consumed)
-- **Notify** the player with a chat message
+Potions are divided into **groups**. Only one potion per group may be active at a time — but potions from *different* groups can be combined freely. Certain potions are **blacklisted** and can never be combined with anything.
 
-The current potion must expire naturally before a new one can be drunk.
+All of this is configured through a simple JSON file.
 
-## Covered potions
+## Default behaviour
 
-All potions from the Alchemy mod are covered:
+### Blacklisted (solo only)
+
+These potions cannot be active at the same time as any other potion:
 
 | Potion | ID |
 |---|---|
-| Archer's Flask | archerpotionid |
-| Healing Oil | healingeffectpotionid |
-| Hunger Enhance | hungerenhancepotionid |
-| Hunger Suppress | hungersupresspotionid |
-| Hunter's Delight | hunterpotionid |
-| Looter's Delight | looterpotionid |
-| Fighter's Flask | meleepotionid |
-| Miner's Flask | miningpotionid |
-| Purging Brew | poisontickpotionid |
-| Predator Pheromones | predatorpotionid |
-| Potent Oil (Regen) | regentickpotionid |
-| Scent Mask | scentmaskpotionid |
-| Sprinter's Flask | speedpotionid |
-| Vitality Flask | vitalitypotionid |
-| Recall Flask | recallpotionid |
-| Nutrition Potion | nutritionpotionid |
-| Glow Flask | glowpotionid |
-| Water Breathing Flask | waterbreathepotionid |
-| Temporal Potion | temporalpotionid |
-| Reshape Potion | reshapepotionid |
+| Purging Brew | `poisontickpotionid` |
+| Temporal Potion | `temporalpotionid` |
+
+### Groups
+
+Within each group, only one potion may be active at a time. Potions from different groups can be stacked.
+
+**Combat** — archer, hunter, melee, predator, vitality, speed
+
+| Potion | ID |
+|---|---|
+| Archer's Flask | `archerpotionid` |
+| Hunter's Delight | `hunterpotionid` |
+| Fighter's Flask | `meleepotionid` |
+| Predator Pheromones | `predatorpotionid` |
+| Vitality Flask | `vitalitypotionid` |
+| Sprinter's Flask | `speedpotionid` |
+
+**Survival** — hunger and health management
+
+| Potion | ID |
+|---|---|
+| Hunger Enhance | `hungerenhancepotionid` |
+| Hunger Suppress | `hungersupresspotionid` |
+| Healing Oil | `healingeffectpotionid` |
+| Potent Oil (Regen) | `regentickpotionid` |
+
+**Utility** — non-combat buffs
+
+| Potion | ID |
+|---|---|
+| Scent Mask | `scentmaskpotionid` |
+| Looter's Delight | `looterpotionid` |
+| Miner's Flask | `miningpotionid` |
+
+**Special** — utility and transformation
+
+| Potion | ID |
+|---|---|
+| Recall Flask | `recallpotionid` |
+| Nutrition Potion | `nutritionpotionid` |
+| Glow Flask | `glowpotionid` |
+| Water Breathing Flask | `waterbreathepotionid` |
+| Reshape Potion | `reshapepotionid` |
+
+So for example a player could drink a **combat** potion and a **survival** potion simultaneously, but could not stack two **combat** potions, and could not drink **Purging Brew** alongside anything.
+
+## Configuration
+
+On first launch the mod writes a default config to:
+
+```
+ModConfig/alchemyexclusivepotions.json
+```
+
+Edit this file while the server is stopped. Changes take effect on the next server/client start.
+
+### Full config reference
+
+```json
+{
+  "Enabled": true,
+
+  "ExclusiveBlacklist": [
+    "poisontickpotionid",
+    "temporalpotionid"
+  ],
+
+  "PotionGroups": [
+    {
+      "GroupName": "combat",
+      "PotionIds": [
+        "archerpotionid",
+        "hunterpotionid",
+        "meleepotionid",
+        "predatorpotionid",
+        "vitalitypotionid",
+        "speedpotionid"
+      ]
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `Enabled` | bool | Master switch. `false` disables all restrictions. |
+| `ExclusiveBlacklist` | string[] | Potion IDs that must always be taken alone. A blacklisted potion blocks everything, and everything is blocked while a blacklisted potion is active. |
+| `PotionGroups` | array | Named groups. Only one potion per group may be active at a time. Potions in different groups may be combined freely. |
+| `PotionGroups[].GroupName` | string | Label used in log messages. |
+| `PotionGroups[].PotionIds` | string[] | The `potionId` values belonging to this group. |
+
+### Adding new potions
+
+If Alchemy adds new potions in a future update, find the new potion's `potionId` value (it appears in the item's `potioninfo` attribute block in the Alchemy assets) and add it to whichever group fits, or create a new group entirely. You can also add it to `ExclusiveBlacklist` if it should always be taken alone.
+
+New potion IDs also need to be added to the `AlchemyPotionIds.All` set in `source/AlchemyPotionIds.cs` so the mod knows to check for them in `WatchedAttributes`.
+
+## How it works
+
+The mod uses [Harmony](https://harmony.pardeike.net/) (bundled with Vintage Story) to prefix-patch `PotionEffectManager.TryApplyPotion` — the single method Alchemy calls whenever any potion is consumed.
+
+When the patch fires it checks the config against the player's `WatchedAttributes` (where Alchemy records every active effect) and cancels the call if a conflict is found. The potion is not consumed and the effect is not applied. The player receives a chat notification explaining which rule was triggered.
+
+No Alchemy source files are modified. The patch is applied at runtime and cleanly removed on mod unload.
 
 ## Requirements
 
 - Vintage Story 1.21.0+
 - Alchemy mod 1.8.0+
-- .NET 7 SDK (to build from source)
-
-## Installation
-
-1. Build the mod (see below) or grab the pre-built zip
-2. Place `AlchemyExclusivePotions.zip` in your `Mods/` folder alongside Alchemy
-
-## Building from source
-
-**Linux / macOS:**
-```bash
-./build.sh "/path/to/VintageStory"
-```
-
-**Windows:**
-```bat
-build.bat "C:\Program Files\Vintage Story"
-```
-
-Output zip will be in the `dist/` folder.
-
-Alternatively, build manually:
-```bash
-dotnet build AlchemyExclusivePotions.csproj -c Release /p:VSGamePath="/path/to/VintageStory"
-```
-Then zip `bin/Release/AlchemyExclusivePotions.dll`, `modinfo.json`, and the `assets/` folder together.
-
-## How it works
-
-The mod uses [Harmony](https://harmony.pardeike.net/) (bundled with Vintage Story) to patch
-`ItemPotion.TryApplyPotion` — the single method Alchemy calls whenever any potion is consumed.
-The prefix patch checks the player's `WatchedAttributes` for any currently-active Alchemy
-potion key. If one is found, the patch returns `false`, which cancels the original method
-entirely (the potion is not consumed and the effect is not applied).
-
-No Alchemy source files are modified. The patch is applied at runtime and cleanly removed
-on mod unload.
-
-## Customisation
-
-If Alchemy adds new potions in future updates, add their `potionId` values to the
-`AlchemyPotionIds.All` set in `src/AlchemyExclusivePotionsMod.cs`.
-
-To change the player notification message, edit:
-`assets/alchemyexclusivepotions/lang/en.json`

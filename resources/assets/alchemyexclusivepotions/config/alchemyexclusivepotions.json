@@ -1,0 +1,49 @@
+{
+  "Enabled": true,
+
+  "ExclusiveBlacklist": [
+    "poisontickpotionid",
+    "temporalpotionid"
+  ],
+
+  "PotionGroups": [
+    {
+      "GroupName": "combat",
+      "PotionIds": [
+        "archerpotionid",
+        "hunterpotionid",
+        "meleepotionid",
+        "predatorpotionid",
+        "vitalitypotionid",
+        "speedpotionid"
+      ]
+    },
+    {
+      "GroupName": "survival",
+      "PotionIds": [
+        "hungerenhancepotionid",
+        "hungersupresspotionid",
+        "healingeffectpotionid",
+        "regentickpotionid"
+      ]
+    },
+    {
+      "GroupName": "utility",
+      "PotionIds": [
+        "scentmaskpotionid",
+        "looterpotionid",
+        "miningpotionid"
+      ]
+    },
+    {
+      "GroupName": "special",
+      "PotionIds": [
+        "recallpotionid",
+        "nutritionpotionid",
+        "glowpotionid",
+        "waterbreathepotionid",
+        "reshapepotionid"
+      ]
+    }
+  ]
+}

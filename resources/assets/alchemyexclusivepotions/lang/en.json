@@ -1,3 +1,5 @@
 {
-    "alchemyexclusivepotions:potion-already-active": "A potion effect is already active. Wait for it to expire before drinking another."
+    "alchemyexclusivepotions:potion-blacklisted-incoming": "That potion cannot be taken while another potion effect is active — it must be taken alone.",
+    "alchemyexclusivepotions:potion-blacklisted-active": "You cannot drink another potion while this effect is active. Wait for it to expire.",
+    "alchemyexclusivepotions:potion-group-conflict": "A potion from the same group is already active. Wait for it to expire before drinking another."
 }

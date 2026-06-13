@@ -38,8 +38,8 @@ Within each group, only one potion may be active at a time. Potions from differe
 |---|---|
 | Hunger Enhance | `hungerenhancepotionid` |
 | Hunger Suppress | `hungersupresspotionid` |
-| Healing Oil | `healingeffectpotionid` |
-| Potent Oil (Regen) | `regentickpotionid` |
+| Potent Oil (Heal Effectiveness) | `healingeffectpotionid` |
+| Healing Oil | `regentickpotionid` |
 
 **Utility** — non-combat buffs
 
